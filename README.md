@@ -1,2 +1,2 @@
 # sexycap
-qt quick with winpcap
+Welcome to sexycap!
