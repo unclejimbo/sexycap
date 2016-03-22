@@ -23,6 +23,7 @@ include(deployment.pri)
 
 HEADERS += \
     winpcap.h \
-    devicemodel.h
+    devicemodel.h \
+    protocols.h
 
 DEFINES += WPCAP HAVE_REMOTE
