@@ -39,8 +39,9 @@ ApplicationWindow {
                             text: "Select An Interface"
                         }
                         ComboBox {
+                            id: device
                             width: 500
-                            model: deviceModel
+                            model: pcap.devices()
                             textRole: "description"
                         }
                         CheckBox {
@@ -76,6 +77,12 @@ ApplicationWindow {
                     RowLayout {
                         Button {
                             text: "Caputure!"
+                            onClicked: function() {
+                                if (pcap.captureStart(device.currentText,
+                                                      mixedMode.checked,
+                                                      timeOut.text))
+                                    console.log("capture sucess!")
+                            }
                         }
                     }
                 }

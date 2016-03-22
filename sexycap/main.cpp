@@ -10,9 +10,10 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
+    // Initialize WinPcap and embed it into qml
     WinPcap pcap;
     pcap.readDevices();
-    engine.rootContext()->setContextProperty("deviceModel", QVariant::fromValue(pcap.devices()));
+    engine.rootContext()->setContextProperty("pcap", &pcap);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
