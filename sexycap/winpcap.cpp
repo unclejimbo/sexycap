@@ -9,14 +9,14 @@ WinPcap::WinPcap(QObject *parent)
 
 }
 
-void WinPcap::readDevices()
+bool WinPcap::readDevices()
 {
     pcap_if_t *alldevs;
     char errbuf[PCAP_ERRBUF_SIZE];
 
     if (pcap_findalldevs_ex(const_cast<char*>(PCAP_SRC_IF_STRING), NULL, &alldevs, errbuf) == -1) {
         std::cerr << "ERROR::pcap_findalldevs_ex: " << errbuf << std::endl;
-        exit(1);
+        return false;
     }
 
     for(auto d= alldevs; d != NULL; d= d->next) {
@@ -28,6 +28,7 @@ void WinPcap::readDevices()
     }
 
     pcap_freealldevs(alldevs);
+    return true;
 }
 
 const QList<QObject*> WinPcap::devices()

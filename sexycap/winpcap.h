@@ -12,7 +12,7 @@ class WinPcap : public QObject
 public:
     WinPcap(QObject* parent = 0);
 
-    void readDevices();
+    bool readDevices();
     const QList<QObject*> devices();
 
 private:
