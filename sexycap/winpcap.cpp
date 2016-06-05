@@ -23,7 +23,7 @@ bool WinPcap::readDevices()
         return false;
     }
 
-    for(auto d= _alldevs; d != nullptr; d= d->next) {
+    for(auto d = _alldevs; d != nullptr; d = d->next) {
         std::cout << d->name << std::endl;
     }
 

@@ -15,10 +15,8 @@ public:
     DeviceModel(const QString& name, const QString& description, QObject* parent = 0);
 
     QString name() const;
-    void setName(const QString& name);
 
     QString description() const;
-    void setDescription(const QString& description);
 
 private:
     QString _name;
