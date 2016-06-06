@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QVector>
 #include <QList>
-#include <pcap/pcap.h>
+#include <pcap.h>
 
 class WinPcap : public QObject
 {

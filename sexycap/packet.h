@@ -2,32 +2,37 @@
 #define PACKET_H
 
 #include <QObject>
-#include <pcap/pcap.h>
+#include <pcap.h>
 
 class Packet : public QObject
 {
     Q_OBJECT
 
     Q_PROPERTY(QString time READ time)
-    Q_PROPERTY(int headerLength READ headerLength)
-    Q_PROPERTY(int packetLength READ packetLength)
+    Q_PROPERTY(int len READ len)
+    Q_PROPERTY(QString src READ src)
+    Q_PROPERTY(QString dst READ dst)
+    Q_PROPERTY(QString info READ info)
 
 public:
-    explicit Packet(QObject *parent = 0);
-    Packet(const pcap_pkthdr* header, const u_char* pkt_data);
-
-    virtual void parse();
+    Packet(const QString& timestr, int len, QObject* parent = 0);
+    virtual ~Packet();
 
     QString time() const;
-    int headerLength() const;
-    int packetLength() const;
+    int len() const;
+    QString src() const;
+    QString dst() const;
+    virtual QString info() const = 0;
 
-private:
-    const pcap_pkthdr* _header;
-    const u_char* _pkt_data;
-    QString _timeStr;
-    int _header_length;
-    int _packet_length;
+    Packet* next;
+
+    virtual void parse(const u_char* pkt_data) = 0;
+
+protected:
+    QString _timestr;
+    int _len;
+    QString _src;
+    QString _dst;
 };
 
 #endif // PACKET_H

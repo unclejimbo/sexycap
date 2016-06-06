@@ -1,6 +1,23 @@
 #ifndef PROTOCOLS_H
 #define PROTOCOLS_H
 
+#include <pcap.h>
+
+typedef struct mac_address {
+    u_char byte1;
+    u_char byte2;
+    u_char byte3;
+    u_char byte4;
+    u_char byte5;
+    u_char byte6;
+}mac_address;
+
+typedef struct ethernet_header {
+    mac_address saddr; // source mac address
+    mac_address daddr; // destination mac address
+    u_short     tof;   // type of frame
+}ethernet_header;
+
 typedef struct ipv4_address {
     u_char byte1;
     u_char byte2;
@@ -17,8 +34,8 @@ typedef struct ipv4_header {
     u_char     ttl;            // time-to-live
     u_char     protocal;       // transport-layer protocol
     u_short    crc;            // header checksum
-    ip_address saddr;          // source address
-    ip_address daddr;          // destination address
+    ipv4_address saddr;          // source address
+    ipv4_address daddr;          // destination address
     u_int      op_pad;         // option + padding
 }ipv4_header;
 
