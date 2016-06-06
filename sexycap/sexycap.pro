@@ -5,8 +5,9 @@ QT += qml quick widgets
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    devicemodel.cpp \
-    winpcap.cpp
+    winpcap.cpp \
+    packet.cpp \
+    device.cpp
 
 RESOURCES += qml.qrc
 
@@ -25,7 +26,8 @@ include(deployment.pri)
 
 HEADERS += \
     winpcap.h \
-    devicemodel.h \
-    protocols.h
+    protocols.h \
+    packet.h \
+    device.h
 
 DEFINES += WPCAP HAVE_REMOTE

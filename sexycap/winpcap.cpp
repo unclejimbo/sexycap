@@ -1,6 +1,8 @@
 #include "winpcap.h"
 
 #include <iostream>
+#include "device.h"
+#include "packet.h"
 
 WinPcap::WinPcap(QObject *parent)
     :QObject(parent)
@@ -12,6 +14,10 @@ WinPcap::~WinPcap()
 {
     pcap_freealldevs(_alldevs);
     _alldevs = nullptr;
+    for (auto p : _packets)
+        free(p);
+    for (auto d : _devices)
+        free(d);
 }
 
 bool WinPcap::readDevices()
@@ -28,19 +34,9 @@ bool WinPcap::readDevices()
     }
 
     for (auto d = _alldevs; d != nullptr; d = d->next) {
-        _devices.append(std::move(new DeviceModel(d->name, d->description)));
+        auto dv = new Device(d->name, d->description);
+        _devices.append(dv);
     }
-
-    pcap_t* adapter = pcap_open(_alldevs->name,
-                                65535,   // capture all data
-                                PCAP_OPENFLAG_PROMISCUOUS,
-                                1000,
-                                nullptr, // remote auth off
-                                errbuf);
-    if (adapter == nullptr)
-        std::cerr << "open fail" << std::endl;
-    else
-        std::cout << "find" << std::endl;
 
     return true;
 }
@@ -50,27 +46,45 @@ const QList<QObject*> WinPcap::devices()
     return _devices;
 }
 
-bool WinPcap::captureStart(QString description, bool mixed, QString timeout)
+void packetHandler(u_char* param, const pcap_pkthdr* header, const u_char* pkt_data)
+{
+    auto packets = reinterpret_cast<QVector<QObject*>*>(param);
+
+    auto pkt = new Packet(header, pkt_data);
+    pkt->parse();
+    packets->append(pkt);
+}
+
+bool WinPcap::captureStart(int device_index, bool mixed, QString timeout)
 {
     auto d = _alldevs;
-    for (; description.compare(d->description); d = _alldevs->next) {
+    for (int i = 0; i++ < device_index; d = _alldevs->next) {
         // Continue until find the correct device
     }
-    int mixedMode = mixed ? PCAP_OPENFLAG_PROMISCUOUS : 0;
+    int mixed_mode = mixed ? PCAP_OPENFLAG_PROMISCUOUS : 0;
     int timeOut = timeout.toInt();
     char errbuf[PCAP_ERRBUF_SIZE];
 
-    pcap_t* adapter = pcap_open(d->name,
-                                65535,   // capture all data
-                                mixedMode,
-                                timeOut,
-                                nullptr, // remote auth off
-                                errbuf);
+    auto adapter = pcap_open(d->name,
+                             65535,   // capture all data
+                             mixed_mode,
+                             timeOut,
+                             nullptr, // remote auth off
+                             errbuf);
     if (adapter == nullptr) {
         std::cerr << "ERROR::WinPcap::captureStart(QString, bool, QString): "
                   << errbuf << std::endl;
         return false;
     }
+
+    u_int netmask;
+    if (d->addresses != nullptr)
+        netmask = (reinterpret_cast<struct sockaddr_in*>(d->addresses->netmask))->sin_addr.S_un.S_addr;
+    else
+        netmask = 0xffffff; // default C class network
+
+    pcap_loop(adapter, 1, packetHandler, reinterpret_cast<u_char*>(&_packets));
+
     return true;
 }
 

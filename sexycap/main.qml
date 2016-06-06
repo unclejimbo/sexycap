@@ -78,7 +78,7 @@ ApplicationWindow {
                         Button {
                             text: "Caputure!"
                             onClicked: function() {
-                                if (pcap.captureStart(device.currentText,
+                                if (pcap.captureStart(device.currentIndex,
                                                       mixedMode.checked,
                                                       timeOut.text))
                                     console.log("capture sucess!")

@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class DeviceModel : public QObject
+class Device : public QObject
 {
     Q_OBJECT
 
@@ -11,8 +11,8 @@ class DeviceModel : public QObject
     Q_PROPERTY(QString description READ description)
 
 public:
-    DeviceModel(QObject* parent = 0);
-    DeviceModel(const QString& name, const QString& description, QObject* parent = 0);
+    Device(QObject* parent = 0);
+    Device(const QString& name, const QString& description, QObject* parent = 0);
 
     QString name() const;
 
