@@ -4,6 +4,7 @@
 #include <QTextStream>
 #include "device.h"
 #include "ethernet.h"
+#include "packetmodel.h"
 
 WinPcap::WinPcap(QObject *parent)
     :QObject(parent)
@@ -70,11 +71,13 @@ void packetHandler(u_char* param, const pcap_pkthdr* header, const u_char* pkt_d
     int len = header->len;
 
     Packet* pkt = nullptr;
+    PacketModel* pkt_model = nullptr;
     switch(user_param->dl_type) {
     case DLT_EN10MB:
-        pkt = new Ethernet(time, len);
+        pkt = new Ethernet();
         pkt->parse(pkt_data);
-        user_param->packets->append(pkt);
+        pkt_model = new PacketModel(time, len, pkt);
+        user_param->packets->append(pkt_model);
         break;
     default:
         break;
@@ -110,7 +113,7 @@ bool WinPcap::captureStart(int device_index, bool mixed, QString timeout)
         netmask = 0xffffff; // default C class network
 
     struct bpf_program fcode;
-    if (pcap_compile(adapter, &fcode, "ip", 1, netmask) < 0) {
+    if (pcap_compile(adapter, &fcode, "ip and udp", 1, netmask) < 0) {
         return false;
     }
 

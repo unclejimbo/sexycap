@@ -6,10 +6,11 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     winpcap.cpp \
-    packet.cpp \
     device.cpp \
     ethernet.cpp \
-    ipv4.cpp
+    ipv4.cpp \
+    arp.cpp \
+    packetmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -29,10 +30,12 @@ include(deployment.pri)
 
 HEADERS += \
     winpcap.h \
-    protocols.h \
-    packet.h \
+    protocols.h \ 
     device.h \
     ethernet.h \
-    ipv4.h
+    ipv4.h \
+    arp.h \
+    packetmodel.h \
+    packet.h
 
 DEFINES += WPCAP HAVE_REMOTE

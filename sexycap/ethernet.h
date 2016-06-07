@@ -1,18 +1,21 @@
 #ifndef ETHERNET_H
 #define ETHERNET_H
 
+#include <QString>
 #include "packet.h"
 
 class Ethernet : public Packet
 {
-    Q_OBJECT
-
 public:
-    Ethernet(const QString& timeStr, int len, QObject* parent = 0);
-    ~Ethernet();
+    Ethernet() = default;
+    ~Ethernet() = default;
 
-    QString info() const override;
-    void parse(const u_char *pkt_data) override;
+    bool parse(const u_char *pkt_data) override;
+
+private:
+    QString _saddr;
+    QString _daddr;
+    u_short _tof;
 };
 
 #endif // ETHERNET_H
