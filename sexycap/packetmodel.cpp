@@ -9,6 +9,11 @@ void PacketModel::add_packet(Packet *packet, QString time, int length)
     endInsertRows();
 }
 
+Packet *PacketModel::at(int index)
+{
+    return _packets.at(index);
+}
+
 int PacketModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
@@ -57,6 +62,9 @@ QVariant PacketModel::data(const QModelIndex& index, int role) const
         while(packet->child != nullptr)
             packet = packet->child;
         rtn = packet->description();
+        break;
+    case Qt::DisplayRole:
+        rtn = packet->full_text();
         break;
     default:
         rtn = QVariant();

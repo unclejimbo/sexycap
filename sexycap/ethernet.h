@@ -16,6 +16,7 @@ public:
     QString src() const override;
     QString dst() const override;
     QString description() const override;
+    QString full_text() const override;
 
 private:
     QString _saddr;

@@ -1,7 +1,6 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
-//import WinPCap 1.0
 
 ApplicationWindow {
     visible: true
@@ -109,20 +108,19 @@ ApplicationWindow {
             }
 
             SplitView {
-                id: splitView1
-                width: 100
-                height: 500
+                height: 550
+                Layout.fillHeight: true
                 Layout.rowSpan: 1
                 clip: false
-                Layout.fillHeight: false
                 orientation: Qt.Vertical
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 TableView {
-                    id: tableView1
+                    id: tabv
                     model: pcap.packetModel
                     width: 800
+                    height: 250
                     anchors.horizontalCenter: parent.horizontalCenter
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -132,13 +130,22 @@ ApplicationWindow {
                     TableViewColumn{ role: "src"; title: "Source"; width: 150 }
                     TableViewColumn{ role: "dst"; title: "Destination"; width: 150 }
                     TableViewColumn{ role: "describe"; title: "Desctiption"; width: 300 }
+                    onCurrentRowChanged: full_text.update_text(tabv.currentRow)
                 }
 
-                TextArea {
-                    id: textArea1
-                    visible: false
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    readOnly: true
+                Text {
+                    id: full_text
+                    visible: true
+                    text: ""
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+
+                    function update_text(row_index) {
+                        var str = pcap.displaySelected(row_index);
+                        full_text.text = str;
+                    }
                 }
 
             }

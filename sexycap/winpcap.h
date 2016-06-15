@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QItemSelectionModel>
 #include <pcap.h>
 #include "packetmodel.h"
 
@@ -22,6 +23,7 @@ public:
     Q_INVOKABLE const QList<QObject*> devices();
     Q_INVOKABLE bool captureStart(int device_index, bool mixed, QString timeout = "1000");
     Q_INVOKABLE bool captureStop();
+    Q_INVOKABLE QString displaySelected(int index);
 
 private:
     pcap_if_t* _alldevs;

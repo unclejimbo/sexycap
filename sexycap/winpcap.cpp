@@ -133,3 +133,9 @@ bool WinPcap::captureStop()
 {
     return true;
 }
+
+QString WinPcap::displaySelected(int index)
+{
+    auto str = _packet_model.at(index)->full_text();
+    return str;
+}

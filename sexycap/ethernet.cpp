@@ -46,3 +46,29 @@ QString Ethernet::description() const
     return QString("Data frame from %1 to %2")
             .arg(_saddr).arg(_daddr);
 }
+
+QString Ethernet::full_text() const
+{
+    QString str;
+    str.append("Ethernet10MB Header:\n");
+    str.append(QString("  Source Mac Address: %1\n").arg(_saddr));
+    str.append(QString("  Destination Mac Address: %1\n").arg(_daddr));
+
+    QString service_type;
+    switch(_tof) {
+    case 0x0800:
+        service_type = "IPv4";
+        break;
+    case 0x0806:
+        service_type = "ARP";
+        break;
+    default:
+        break;
+    }
+    str.append(QString("  Type of Service: %1(%2)\n").arg(service_type).arg(_tof));
+
+    if(child != nullptr)
+        str.append(child->full_text());
+
+    return str;
+}

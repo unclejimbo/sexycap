@@ -24,6 +24,7 @@ public:
     virtual QString src() const = 0;
     virtual QString dst() const = 0;
     virtual QString description() const = 0;
+    virtual QString full_text() const = 0;
 
     Packet* child;
     Packet* parent;
