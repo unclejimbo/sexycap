@@ -1,14 +1,14 @@
-#ifndef ETHERNET_H
-#define ETHERNET_H
+#ifndef UDP_H
+#define UDP_H
 
 #include <QString>
 #include "packet.h"
 
-class Ethernet : public Packet
+class Udp : public Packet
 {
 public:
-    explicit Ethernet(Packet* p): Packet(p){}
-    ~Ethernet() = default;
+    explicit Udp(Packet* p): Packet(p){}
+    ~Udp() = default;
 
     bool parse(const u_char *pkt_data) override;
 
@@ -18,9 +18,6 @@ public:
     QString description() const override;
 
 private:
-    QString _saddr;
-    QString _daddr;
-    u_short _tof;
 };
 
-#endif // ETHERNET_H
+#endif // UDP_H

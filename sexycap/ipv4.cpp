@@ -22,8 +22,31 @@ bool Ipv4::parse(const u_char* pkt_data)
     case 0x11: // UDP
         break;
     default:
-        next = nullptr;
+        child = nullptr;
     }
 
     return true;
 }
+
+QString Ipv4::type() const
+{
+    return QString("IPv4");
+}
+
+QString Ipv4::src() const
+{
+    return _saddr;
+}
+
+QString Ipv4::dst() const
+{
+    return _daddr;
+}
+
+QString Ipv4::description() const
+{
+    return QString("IP datagram from %1 to %2")
+            .arg(_saddr).arg(_daddr);
+}
+
+

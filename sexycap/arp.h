@@ -7,10 +7,15 @@
 class Arp : public Packet
 {
 public:
-    Arp() = default;
+    explicit Arp(Packet* p): Packet(p){}
     ~Arp() = default;
 
     bool parse(const u_char *pkt_data) override;
+
+    QString type() const override;
+    QString src() const override;
+    QString dst() const override;
+    QString description() const override;
 
 private:
     u_short _htype;

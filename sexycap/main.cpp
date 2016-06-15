@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+//#include <QtQml>
 
 #include "winpcap.h"
 
@@ -14,6 +15,8 @@ int main(int argc, char *argv[])
     WinPcap pcap;
     pcap.readDevices();
     engine.rootContext()->setContextProperty("pcap", &pcap);
+
+    //qmlRegisterType<PacketModel>("WinPCap", 1, 0, "PacketModel");
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

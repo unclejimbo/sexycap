@@ -39,7 +39,7 @@ typedef struct ipv4_address {
 
 inline QString ipv42qstr(ipv4_address ip)
 {
-    return QString("%1%2%3%4")
+    return QString("%1.%2.%3.%4")
             .arg(ip.byte1)
             .arg(ip.byte2)
             .arg(ip.byte3)

@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     ethernet.cpp \
     ipv4.cpp \
     arp.cpp \
-    packetmodel.cpp
+    packetmodel.cpp \
+    udp.cpp
 
 RESOURCES += qml.qrc
 
@@ -36,6 +37,7 @@ HEADERS += \
     ipv4.h \
     arp.h \
     packetmodel.h \
-    packet.h
+    packet.h \
+    udp.h
 
 DEFINES += WPCAP HAVE_REMOTE

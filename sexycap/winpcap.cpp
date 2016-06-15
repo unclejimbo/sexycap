@@ -16,10 +16,8 @@ WinPcap::~WinPcap()
 {
     pcap_freealldevs(_alldevs);
     _alldevs = nullptr;
-    for (auto p : _packets)
-        free(p);
     for (auto d : _devices)
-        free(d);
+        delete d;
 }
 
 bool WinPcap::readDevices()
@@ -43,6 +41,11 @@ bool WinPcap::readDevices()
     return true;
 }
 
+PacketModel* WinPcap::packetModel()
+{
+    return &_packet_model;
+}
+
 const QList<QObject*> WinPcap::devices()
 {
     return _devices;
@@ -51,7 +54,7 @@ const QList<QObject*> WinPcap::devices()
 typedef struct UserParam
 {
     int dl_type;
-    QVector<QObject*>* packets;
+    PacketModel* packet_model;
 }UserParam;
 
 void packetHandler(u_char* param, const pcap_pkthdr* header, const u_char* pkt_data)
@@ -71,17 +74,16 @@ void packetHandler(u_char* param, const pcap_pkthdr* header, const u_char* pkt_d
     int len = header->len;
 
     Packet* pkt = nullptr;
-    PacketModel* pkt_model = nullptr;
     switch(user_param->dl_type) {
     case DLT_EN10MB:
-        pkt = new Ethernet();
+        pkt = new Ethernet(nullptr);
         pkt->parse(pkt_data);
-        pkt_model = new PacketModel(time, len, pkt);
-        user_param->packets->append(pkt_model);
         break;
     default:
         break;
     }
+
+    user_param->packet_model->add_packet(pkt, time, len);
 }
 
 bool WinPcap::captureStart(int device_index, bool mixed, QString timeout)
@@ -121,7 +123,7 @@ bool WinPcap::captureStart(int device_index, bool mixed, QString timeout)
         return false;
     }
 
-    UserParam param = { DLT_EN10MB, &_packets };
+    UserParam param = { DLT_EN10MB, &_packet_model };
     pcap_loop(adapter, 1, packetHandler, reinterpret_cast<u_char*>(&param));
 
     return true;

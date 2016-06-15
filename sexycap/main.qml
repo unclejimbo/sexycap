@@ -1,12 +1,13 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
+//import WinPCap 1.0
 
 ApplicationWindow {
     visible: true
     width: 800
     height: 600
-    title: "Hello World"
+    title: "Sexycap"
 
     menuBar: MenuBar {
         Menu {
@@ -22,92 +23,124 @@ ApplicationWindow {
         }
     }
 
-    TabView {
+    Rectangle {
+        id: rectangle1
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 0
+        anchors.leftMargin: 0
+        anchors.topMargin: 0
         anchors.fill: parent
 
-        // Welcom tab
-        Tab {
-            title: "Welcome"
-            Rectangle {
-                anchors.fill: parent
+        ColumnLayout {
+            spacing: 5
+            anchors.horizontalCenter: parent.horizontalCenter
 
-                ColumnLayout {
-                    anchors.horizontalCenter: parent.horizontalCenter
+            RowLayout {
+                width: 800
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.fillHeight: false
+                Layout.fillWidth: false
+                spacing: 15
+                Button {
+                    id: capbtn
+                    text: "Caputure!"
+                    Layout.fillHeight: false
+                    enabled: true
+                    onClicked: function() {
+                        if (pcap.captureStart(device.currentIndex,
+                                              mixedMode.checked))
+                            console.log("capture sucess!")
+                    }
+                }
 
-                    RowLayout {
-                        Label {
-                            text: "Select An Interface"
-                        }
-                        ComboBox {
-                            id: device
-                            width: 500
-                            model: pcap.devices()
-                            textRole: "description"
-                        }
-                        CheckBox {
-                            text: "Advanced"
-                            checked: false
-                            onCheckedChanged: function() {
-                                if (checked == true)
-                                    advanced.visible = true
-                                else
-                                    advanced.visible = false
-                            }
-                        }
+                Button {
+                    id: stopbtn
+                    text: qsTr("Stop!")
+                    enabled: false
+                }
+
+                Row {
+                    id: row1
+                    width: 200
+                    height: 400
+                    Layout.fillHeight: true
+                    spacing: 5
+
+                    Label {
+                        text: "Select An Interface"
+                        anchors.verticalCenter: parent.verticalCenter
                     }
 
-                    RowLayout {
-                        id: advanced
-                        visible: false
-                        CheckBox {
-                            id: mixedMode
-                            text: "Mixed Mode"
-                            checked: true
-                        }
-                        Label {
-                            text: "Time Out (ms):"
-                        }
-                        TextField {
-                            id: timeOut
-                            text: "1000"
-                            validator: IntValidator {bottom: 0;}
-                        }
+                    ComboBox {
+                        id: device
+                        width: 100
+                        anchors.verticalCenter: parent.verticalCenter
+                        clip: false
+                        model: pcap.devices()
+                        textRole: "description"
+                    }
+                }
+                CheckBox {
+                    id: mixedMode
+                    text: "Mixed Mode"
+                    Layout.fillHeight: false
+                    checked: true
+                }
+
+                Row {
+                    id: row2
+                    width: 200
+                    height: 400
+                    Layout.fillHeight: true
+                    spacing: 5
+
+                    Label {
+                        text: qsTr("Filter")
+                        anchors.verticalCenter: parent.verticalCenter
                     }
 
-                    RowLayout {
-                        Button {
-                            text: "Caputure!"
-                            onClicked: function() {
-                                if (pcap.captureStart(device.currentIndex,
-                                                      mixedMode.checked,
-                                                      timeOut.text))
-                                    console.log("capture sucess!")
-                            }
-                        }
+                    TextField {
+                        id: filter
+                        width: 200
+                        anchors.verticalCenter: parent.verticalCenter
+                        placeholderText: qsTr("Packet Filter")
                     }
                 }
             }
-        }
 
-        // Capture tab
-        Tab {
-            title: "Capture"
-
-            Rectangle {
-                anchors.fill: parent
+            SplitView {
+                id: splitView1
+                width: 100
+                height: 500
+                Layout.rowSpan: 1
+                clip: false
+                Layout.fillHeight: false
+                orientation: Qt.Vertical
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                 TableView {
-                    anchors.fill: parent
-
-                    TableViewColumn {
-                        title: "No"
-                        width: 50
-                    }
-                    TableViewColumn {
-                        title: "Protocol"
-                        width: 100
-                    }
+                    id: tableView1
+                    model: pcap.packetModel
+                    width: 800
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    TableViewColumn{ role: "no"; title: "No"; width: 20 }
+                    TableViewColumn{ role: "time"; title: "Time"; width: 100 }
+                    TableViewColumn{ role: "len"; title: "Length"; width: 80}
+                    TableViewColumn{ role: "src"; title: "Source"; width: 150 }
+                    TableViewColumn{ role: "dst"; title: "Destination"; width: 150 }
+                    TableViewColumn{ role: "describe"; title: "Desctiption"; width: 300 }
                 }
+
+                TextArea {
+                    id: textArea1
+                    visible: false
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    readOnly: true
+                }
+
             }
         }
     }

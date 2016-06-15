@@ -1,37 +1,41 @@
 #ifndef PACKETMODEL_H
 #define PACKETMODEL_H
 
-#include <QObject>
+#include <QAbstractTableModel>
 #include "packet.h"
 
-class PacketModel : public QObject
+class PacketModel : public QAbstractTableModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString time READ time)
-    Q_PROPERTY(int len READ len)
-    Q_PROPERTY(QString src READ src)
-    Q_PROPERTY(QString dst READ dst)
-    Q_PROPERTY(QString type READ type)
-    Q_PROPERTY(QString info READ info)
-    Q_PROPERTY(QString display READ display)
-
 public:
-    PacketModel(QString& time, int len, Packet* pkt, QObject* parent = 0);
-    ~PacketModel();
+    enum PacketRoles {
+        NumRole = Qt::UserRole + 1,
+        TypeRole,
+        TimeRole,
+        LenRole,
+        SrcRole,
+        DstRole,
+        DscbRole,
+        AllRole
+    };
 
-    QString time() const;
-    int len() const;
-    QString src() const;
-    QString dst() const;
-    QString type() const;
-    QString info() const;
-    QString display() const;
+    explicit PacketModel(QObject* parent = 0): QAbstractTableModel(parent){}
+    ~PacketModel() = default;
+
+    void add_packet(Packet* packet, QString time, int length);
+
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex& index, int role) const override;
+
+protected:
+    QHash<int, QByteArray> roleNames() const override;
 
 private:
-    QString _time;
-    int _len;
-    Packet* _pkt;
+    QVector<Packet*> _packets;
+    QVector<QString> _timeStamps;
+    QVector<int> _lengths;
 };
 
 #endif // PACKETMODEL_H

@@ -12,16 +12,37 @@ bool Ethernet::parse(const u_char *pkt_data)
 
     switch(_tof) {
     case 0x0800: // IPv4
-        next = new Ipv4();
-        next->parse(pkt_data + 14);
+        child = new Ipv4(this);
+        child->parse(pkt_data + 14);
         break;
     case 0x0806: // ARP
-        next = new Arp();
-        next->parse(pkt_data + 14);
+        child = new Arp(this);
+        child->parse(pkt_data + 14);
         break;
     default:
-        next = nullptr;
+        child = nullptr;
     }
 
     return true;
+}
+
+QString Ethernet::type() const
+{
+    return QString("Ethernet10MB");
+}
+
+QString Ethernet::src() const
+{
+    return _saddr;
+}
+
+QString Ethernet::dst() const
+{
+    return _daddr;
+}
+
+QString Ethernet::description() const
+{
+    return QString("Data frame from %1 to %2")
+            .arg(_saddr).arg(_daddr);
 }

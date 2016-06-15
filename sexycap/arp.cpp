@@ -15,7 +15,27 @@ bool Arp::parse(const u_char *pkt_data)
     _tha = mac2qstr(hdr->tha);
     _tpa = ipv42qstr(hdr->tpa);
 
-    next = nullptr;
+    child = nullptr;
 
     return true;
+}
+
+QString Arp::type() const
+{
+    return QString("ARP");
+}
+
+QString Arp::src() const
+{
+    return parent->src();
+}
+
+QString Arp::dst() const
+{
+    return parent->dst();
+}
+
+QString Arp::description() const
+{
+    return QString();
 }
