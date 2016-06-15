@@ -1,4 +1,11 @@
 #include "packetmodel.h"
+#include <algorithm>
+
+PacketModel::~PacketModel()
+{
+    for (auto p : _packets)
+        delete p;
+}
 
 void PacketModel::add_packet(Packet *packet, QString time, int length)
 {
@@ -11,7 +18,21 @@ void PacketModel::add_packet(Packet *packet, QString time, int length)
 
 Packet *PacketModel::at(int index)
 {
-    return _packets.at(index);
+    if (_packets.size() <= 0)
+        return nullptr;
+    else
+        return _packets.at(index);
+}
+
+void PacketModel::clear_all()
+{
+    beginRemoveRows(QModelIndex(), 0, rowCount());
+    for (auto p : _packets)
+        delete p;
+    _packets.clear();
+    _lengths.clear();
+    _timeStamps.clear();
+    endRemoveRows();
 }
 
 int PacketModel::rowCount(const QModelIndex& parent) const

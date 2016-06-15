@@ -21,10 +21,11 @@ public:
     };
 
     explicit PacketModel(QObject* parent = 0): QAbstractTableModel(parent){}
-    ~PacketModel() = default;
+    ~PacketModel();
 
     void add_packet(Packet* packet, QString time, int length);
     Packet* at(int index);
+    void clear_all();
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;

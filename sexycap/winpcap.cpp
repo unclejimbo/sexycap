@@ -1,6 +1,7 @@
 #include "winpcap.h"
 
 #include <iostream>
+#include <thread>
 #include <QTextStream>
 #include "device.h"
 #include "ethernet.h"
@@ -51,15 +52,9 @@ const QList<QObject*> WinPcap::devices()
     return _devices;
 }
 
-typedef struct UserParam
-{
-    int dl_type;
-    PacketModel* packet_model;
-}UserParam;
-
 void packetHandler(u_char* param, const pcap_pkthdr* header, const u_char* pkt_data)
 {
-    auto user_param = reinterpret_cast<UserParam*>(param);
+    auto user_param = reinterpret_cast<WinPcap::UserParam*>(param);
 
     // parse time
     time_t local_tv_sec = header->ts.tv_sec;
@@ -86,23 +81,25 @@ void packetHandler(u_char* param, const pcap_pkthdr* header, const u_char* pkt_d
     user_param->packet_model->add_packet(pkt, time, len);
 }
 
-bool WinPcap::captureStart(int device_index, bool mixed, QString timeout)
+bool WinPcap::captureStart(int device_index, bool mixed, QString filter)
 {
+    _packet_model.clear_all();
     auto selected_device = _alldevs;
     for (int i = 0; i++ < device_index; selected_device = _alldevs->next) {
         // Continue until find the correct device
     }
     int mixed_mode = mixed ? PCAP_OPENFLAG_PROMISCUOUS : 0;
-    int timeOut = timeout.toInt();
+    if (filter.isEmpty())
+        filter = "ip and udp";
     char errbuf[PCAP_ERRBUF_SIZE];
 
-    auto adapter = pcap_open(selected_device->name,
-                             65535,   // capture all data
-                             mixed_mode,
-                             timeOut,
-                             nullptr, // remote auth off
-                             errbuf);
-    if (adapter == nullptr) {
+    _adapter = pcap_open(selected_device->name,
+                         65535,   // capture all data
+                         mixed_mode,
+                         1000,
+                         nullptr, // remote auth off
+                         errbuf);
+    if (_adapter == nullptr) {
         std::cerr << "ERROR::WinPcap::captureStart: "
                   << errbuf << std::endl;
         return false;
@@ -115,27 +112,38 @@ bool WinPcap::captureStart(int device_index, bool mixed, QString timeout)
         netmask = 0xffffff; // default C class network
 
     struct bpf_program fcode;
-    if (pcap_compile(adapter, &fcode, "ip and udp", 1, netmask) < 0) {
+    if (pcap_compile(_adapter, &fcode, filter.toStdString().c_str(), 1, netmask) < 0) {
         return false;
     }
 
-    if (pcap_setfilter(adapter, &fcode) < 0) {
+    if (pcap_setfilter(_adapter, &fcode) < 0) {
         return false;
     }
 
     UserParam param = { DLT_EN10MB, &_packet_model };
-    pcap_loop(adapter, 1, packetHandler, reinterpret_cast<u_char*>(&param));
+    //std::thread t(&WinPcap::capture, this, param);
+    //t.detach();
+    pcap_loop(_adapter, 1, packetHandler, reinterpret_cast<u_char*>(&param));
 
     return true;
 }
 
 bool WinPcap::captureStop()
 {
+    pcap_breakloop(_adapter);
     return true;
 }
 
 QString WinPcap::displaySelected(int index)
 {
-    auto str = _packet_model.at(index)->full_text();
-    return str;
+    auto pm = _packet_model.at(index);
+    if (pm != nullptr)
+        return pm->full_text();
+    else
+        return QString("");
+}
+
+void WinPcap::capture(WinPcap::UserParam param)
+{
+    pcap_loop(_adapter, 2, packetHandler, reinterpret_cast<u_char*>(&param));
 }

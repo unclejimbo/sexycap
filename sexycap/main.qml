@@ -46,8 +46,10 @@ ApplicationWindow {
                     Layout.fillHeight: false
                     enabled: true
                     onClicked: function() {
+                        stopbtn.enabled = true;
                         if (pcap.captureStart(device.currentIndex,
-                                              mixedMode.checked))
+                                              mixedMode.checked,
+                                              filter.text))
                             console.log("capture sucess!")
                     }
                 }
@@ -56,6 +58,9 @@ ApplicationWindow {
                     id: stopbtn
                     text: qsTr("Stop!")
                     enabled: false
+                    onClicked: function() {
+                        pcap.captureStop();
+                    }
                 }
 
                 Row {

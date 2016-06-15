@@ -44,7 +44,7 @@ QString Arp::full_text() const
 {
     QString str;
     str.append("ARP Header:\n");
-    str.append("  ARP Type: %1\n").arg(type());
+    str.append(QString("  ARP Type: %1\n").arg(type()));
 
     return str;
 }
