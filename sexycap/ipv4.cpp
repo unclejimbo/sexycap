@@ -1,7 +1,7 @@
 #include "ipv4.h"
 #include "protocols.h"
 #include "udp.h"
-#include <iostream>
+#include "tcp.h"
 
 bool Ipv4::parse(const u_char* pkt_data)
 {
@@ -22,6 +22,9 @@ bool Ipv4::parse(const u_char* pkt_data)
     switch(_protocol) {
     case 0x01: // ICMP
     case 0x06: // TCP
+        child = new Tcp(this);
+        child->parse(pkt_data + _hdr_len);
+        break;
     case 0x11: // UDP
         child = new Udp(this);
         child->parse(pkt_data + _hdr_len);

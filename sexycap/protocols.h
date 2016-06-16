@@ -97,6 +97,7 @@ typedef struct tcp_header {
     u_short ctrl;    // control bits
     u_short win;     // window size
     u_short crc;     // checksum
+    u_short urg_ptr; // urgent pointer (if URG set)
 }tcp_header;
 
 #endif // PROTOCOLS_H
