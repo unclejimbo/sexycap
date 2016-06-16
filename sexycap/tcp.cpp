@@ -10,12 +10,13 @@ bool Tcp::parse(const u_char *pkt_data)
     _seq_num = ntohl(hdr->seq_num);
     _ack_num = ntohl(hdr->ack_num);
     _offset = hdr->offset;
-    _urg = hdr->ctrl & 0x20;
-    _ack = hdr->ctrl & 0x10;
-    _psh = hdr->ctrl & 0x08;
-    _rst = hdr->ctrl & 0x04;
-    _syn = hdr->ctrl & 0x02;
-    _fin = hdr->ctrl & 0x01;
+    auto ctrl = ntohs(hdr->ctrl);
+    _urg = ctrl & 0x20;
+    _ack = ctrl & 0x10;
+    _psh = ctrl & 0x08;
+    _rst = ctrl & 0x04;
+    _syn = ctrl & 0x02;
+    _fin = ctrl & 0x01;
     _win = ntohs(hdr->win);
 
     switch(_dport) {
