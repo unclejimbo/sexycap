@@ -1,5 +1,6 @@
 #include "ipv4.h"
 #include "protocols.h"
+#include "udp.h"
 #include <iostream>
 
 bool Ipv4::parse(const u_char* pkt_data)
@@ -7,7 +8,7 @@ bool Ipv4::parse(const u_char* pkt_data)
     auto hdr = reinterpret_cast<const ipv4_header*>(pkt_data);
 
     _version = (hdr->ver_hl & 0xf0) >> 4;
-    _hdr_len = hdr->ver_hl & 0x0f;
+    _hdr_len = (hdr->ver_hl & 0x0f) * 4;
     _tlen = ntohs(hdr->tlen);
     auto flags_fo = ntohs(hdr->flags_fo);
     _df = flags_fo & 0x4000;
@@ -22,6 +23,8 @@ bool Ipv4::parse(const u_char* pkt_data)
     case 0x01: // ICMP
     case 0x06: // TCP
     case 0x11: // UDP
+        child = new Udp(this);
+        child->parse(pkt_data + _hdr_len);
         break;
     default:
         child = nullptr;

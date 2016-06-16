@@ -16,8 +16,12 @@ public:
     QString src() const override;
     QString dst() const override;
     QString description() const override;
+    QString full_text() const override;
 
 private:
+    u_short _sport;
+    u_short _dport;
+    u_short _len;
 };
 
 #endif // UDP_H
