@@ -45,7 +45,10 @@ QString Ipv4::src() const
 
 QString Ipv4::dst() const
 {
-    return _daddr;
+    if (_daddr.compare("255:255:255:255") == 0)
+        return "Broadcast";
+    else
+        return _daddr;
 }
 
 QString Ipv4::description() const

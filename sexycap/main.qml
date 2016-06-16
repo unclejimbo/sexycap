@@ -46,7 +46,7 @@ ApplicationWindow {
                     Layout.fillHeight: false
                     enabled: true
                     onClicked: function() {
-                        stopbtn.enabled = true;
+                        //stopbtn.enabled = true;
                         if (pcap.captureStart(device.currentIndex,
                                               mixedMode.checked,
                                               filter.text))
