@@ -100,4 +100,19 @@ typedef struct tcp_header {
     u_short urg_ptr; // urgent pointer (if URG set)
 }tcp_header;
 
+typedef struct dns_header {
+    u_short id;        // identification
+    u_short flags;     // flags
+    u_short nq;        // number of questions
+    u_short na;        // number of answers
+    u_short nauth_rrs; // number of autohrity resource records
+    u_short naddt_rrs; // number of additional resource records
+}dns_header;
+
+typedef struct dns_question {
+    u_int qname;    // question name
+    u_short qtype;  // question type
+    u_short qclass; // question class
+}dns_question;
+
 #endif // PROTOCOLS_H

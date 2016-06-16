@@ -1,5 +1,6 @@
 #include "udp.h"
 #include "protocols.h"
+#include "dns.h"
 
 bool Udp::parse(const u_char *pkt_data)
 {
@@ -11,6 +12,9 @@ bool Udp::parse(const u_char *pkt_data)
 
     switch(_dport) {
     case 53: // DNS
+        child = new Dns(this);
+        child->parse(pkt_data + 8);
+        break;
     default:
         child = nullptr;
     }
