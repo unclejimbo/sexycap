@@ -138,10 +138,13 @@ ApplicationWindow {
                     onCurrentRowChanged: full_text.update_text(tabv.currentRow)
                 }
 
-                Text {
+                TextArea {
                     id: full_text
+                    height: 300
                     visible: true
                     text: ""
+                    frameVisible: false
+                    readOnly: true
                     anchors.right: parent.right
                     anchors.rightMargin: 10
                     anchors.left: parent.left
