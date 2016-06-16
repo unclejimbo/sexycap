@@ -129,12 +129,12 @@ ApplicationWindow {
                     anchors.horizontalCenter: parent.horizontalCenter
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    TableViewColumn{ role: "no"; title: "No"; width: 20 }
+                    TableViewColumn{ role: "no"; title: "No"; width: 25 }
                     TableViewColumn{ role: "time"; title: "Time"; width: 100 }
-                    TableViewColumn{ role: "len"; title: "Length"; width: 80}
-                    TableViewColumn{ role: "src"; title: "Source"; width: 150 }
-                    TableViewColumn{ role: "dst"; title: "Destination"; width: 150 }
-                    TableViewColumn{ role: "describe"; title: "Desctiption"; width: 300 }
+                    TableViewColumn{ role: "len"; title: "Length"; width: 50}
+                    TableViewColumn{ role: "src"; title: "Source"; width: 120 }
+                    TableViewColumn{ role: "dst"; title: "Destination"; width: 120 }
+                    TableViewColumn{ role: "describe"; title: "Desctiption"; width: 385 }
                     onCurrentRowChanged: full_text.update_text(tabv.currentRow)
                 }
 

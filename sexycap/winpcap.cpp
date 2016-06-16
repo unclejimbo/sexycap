@@ -83,7 +83,7 @@ void packetHandler(u_char* param, const pcap_pkthdr* header, const u_char* pkt_d
 
 bool WinPcap::captureStart(int device_index, bool mixed, QString filter)
 {
-    _packet_model.clear_all();
+    //_packet_model.clear_all();
     auto selected_device = _alldevs;
     for (int i = 0; i++ < device_index; selected_device = _alldevs->next) {
         // Continue until find the correct device

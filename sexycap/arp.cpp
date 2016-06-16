@@ -37,14 +37,30 @@ QString Arp::dst() const
 
 QString Arp::description() const
 {
-    return QString();
+    if (_operation == 1) { // Request
+        return QString(_sha).append(" asks for mac address of ").append(_tpa);
+    } else { // Response
+        return QString(_tha).append(" I am ").append(_spa).append("and my mac address is ").append(_sha);
+    }
+
 }
 
 QString Arp::full_text() const
 {
     QString str;
     str.append("ARP Header:\n");
-    str.append(QString("  ARP Type: %1\n").arg(type()));
+    str.append(QString("  Hardware Type: %1\n").arg(_htype));
+    str.append(QString("  Protocol Type: %1\n").arg(_ptype));
+    str.append(QString("  Hardware Address Length: %1\n").arg(_hlen));
+    str.append(QString("  Protocol Address Length: %1\n").arg(_plen));
+    if (_operation == 1)
+        str.append("  Operation: Request\n");
+    else
+        str.append("  Operation: Responce\n");
+    str.append(QString("  Sender Hardware Address: %1\n").arg(_sha));
+    str.append(QString("  Sender Protocol Address: %1\n").arg(_spa));
+    str.append(QString("  Target Hardware Address: %1\n").arg(_tha));
+    str.append(QString("  Target Protocol Address: %1\n").arg(_tpa));
 
     return str;
 }

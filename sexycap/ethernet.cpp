@@ -6,8 +6,8 @@
 bool Ethernet::parse(const u_char *pkt_data)
 {
     auto hdr = reinterpret_cast<const ethernet_header*>(pkt_data);
-    _saddr = mac2qstr(hdr->saddr);
-    _daddr = mac2qstr(hdr->daddr);
+    _daddr = mac2qstr(hdr->saddr);
+    _saddr = mac2qstr(hdr->daddr);
     _tof = ntohs(hdr->tof);
 
     switch(_tof) {
@@ -38,7 +38,10 @@ QString Ethernet::src() const
 
 QString Ethernet::dst() const
 {
-    return _daddr;
+    if (_daddr.compare("ff:ff:ff:ff:ff:ff") == 0)
+        return "Broadcast";
+    else
+        return _daddr;
 }
 
 QString Ethernet::description() const
