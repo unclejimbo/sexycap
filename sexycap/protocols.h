@@ -80,6 +80,12 @@ typedef struct icmp_header {
     u_int   rest; // rest of the header
 }icmp_header;
 
+typedef struct icmpv6_header {
+    u_char type;
+    u_char code;
+    u_short crc;
+}icmpv6_header;
+
 typedef struct udp_header {
     u_short sport; // source port
     u_short dport; // destination port
