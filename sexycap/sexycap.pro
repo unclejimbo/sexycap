@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     packetmodel.cpp \
     udp.cpp \
     tcp.cpp \
-    dns.cpp
+    dns.cpp \
+    icmp.cpp
 
 RESOURCES += qml.qrc
 
@@ -42,7 +43,8 @@ HEADERS += \
     packet.h \
     udp.h \
     tcp.h \
-    dns.h
+    dns.h \
+    icmp.h
 
 DEFINES += WPCAP HAVE_REMOTE
 

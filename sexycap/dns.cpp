@@ -19,14 +19,7 @@ bool Dns::parse(const u_char* pkt_data)
     _nauth_rrs = ntohs(hdr->nauth_rrs);
     _naddt_rrs = ntohs(hdr->naddt_rrs);
 
-    if (_qr == 0) { // question
-        auto q = reinterpret_cast<const dns_question*>(pkt_data + 12);
-        _qname = ntohl(q->qname);
-        _qtype = ntohl(q->qtype);
-        _qclass = ntohl(q->qclass);
-    } else { // answer
-
-    }
+    // TODO: parse dns body
 
     child = nullptr;
     return true;
@@ -50,7 +43,7 @@ QString Dns::dst() const
 QString Dns::description() const
 {
     if (_qr == 0)
-        return QString("DNS ask for ").append(_qname);
+        return QString("DNS asking");
     else
         return QString("DNS answer");
 }

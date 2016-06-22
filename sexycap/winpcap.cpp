@@ -72,36 +72,6 @@ const QList<QObject*> WinPcap::devices()
     return _devices;
 }
 
-//void packetHandler(u_char* param, const pcap_pkthdr* header, const u_char* pkt_data)
-//{
-//    auto user_param = reinterpret_cast<WinPcap::UserParam*>(param);
-
-//    // parse time
-//    time_t local_tv_sec = header->ts.tv_sec;
-//    struct tm ltime;
-//    localtime_s(&ltime, &local_tv_sec);
-//    char timestr[16];
-//    strftime(timestr, sizeof(timestr), "%H:%M:%S", &ltime);
-//    QString time;
-//    QTextStream(&time) << timestr << "." << header->ts.tv_usec;
-
-//    // parse header length
-//    int len = header->len;
-
-//    Packet* pkt = nullptr;
-//    switch(user_param->dl_type) {
-//    case DLT_EN10MB:
-//        pkt = new Ethernet(nullptr);
-//        pkt->parse(pkt_data);
-//        break;
-//    default:
-//        break;
-//    }
-
-//    if (pkt != nullptr)
-//        user_param->packet_model->add_packet(pkt, time, len);
-//}
-
 void captureStartImp(int dl_type, WinPcap* pcap)
 {
     pcap_pkthdr* header;
@@ -201,8 +171,3 @@ QString WinPcap::displaySelected(int index)
     else
         return QString("");
 }
-
-/*void pcap_imp(pcap_t* adapter, int cnt, pcap_handler handler, WinPcap::UserParam param)
-{
-    pcap_loop(adapter, cnt, handler, reinterpret_cast<u_char*>(&param));
-}*/

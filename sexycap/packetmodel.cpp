@@ -9,11 +9,9 @@ PacketModel::~PacketModel()
 
 void PacketModel::add_packet(Packet *packet, QString time, int length)
 {
-    //beginInsertRows(QModelIndex(), rowCount(), rowCount());
     _packets.append(packet);
     _timeStamps.append(time);
     _lengths.append(length);
-    //endInsertRows();
 }
 
 Packet *PacketModel::at(int index)

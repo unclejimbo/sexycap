@@ -109,10 +109,4 @@ typedef struct dns_header {
     u_short naddt_rrs; // number of additional resource records
 }dns_header;
 
-typedef struct dns_question {
-    u_int qname;    // question name
-    u_short qtype;  // question type
-    u_short qclass; // question class
-}dns_question;
-
 #endif // PROTOCOLS_H
