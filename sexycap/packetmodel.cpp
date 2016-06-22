@@ -9,11 +9,11 @@ PacketModel::~PacketModel()
 
 void PacketModel::add_packet(Packet *packet, QString time, int length)
 {
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
+    //beginInsertRows(QModelIndex(), rowCount(), rowCount());
     _packets.append(packet);
     _timeStamps.append(time);
     _lengths.append(length);
-    endInsertRows();
+    //endInsertRows();
 }
 
 Packet *PacketModel::at(int index)
@@ -70,12 +70,12 @@ QVariant PacketModel::data(const QModelIndex& index, int role) const
         rtn = _lengths[index.row()];
         break;
     case SrcRole:
-        if (packet->child->type().compare("IPv4") == 0)
+        if (packet->child != nullptr && packet->child->type().compare("IPv4") == 0)
             packet = packet->child;
         rtn = packet->src();
         break;
     case DstRole:
-        if (packet->child->type().compare("IPv4") == 0)
+        if (packet->child != nullptr && packet->child->type().compare("IPv4") == 0)
             packet = packet->child;
         rtn = packet->dst();
         break;

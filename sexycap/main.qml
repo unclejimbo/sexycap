@@ -46,7 +46,7 @@ ApplicationWindow {
                     Layout.fillHeight: false
                     enabled: true
                     onClicked: function() {
-                        //stopbtn.enabled = true;
+                        stopbtn.enabled = true;
                         if (pcap.captureStart(device.currentIndex,
                                               mixedMode.checked,
                                               filter.text))
@@ -60,6 +60,7 @@ ApplicationWindow {
                     enabled: false
                     onClicked: function() {
                         pcap.captureStop();
+                        stopbtn.enabled = false;
                     }
                 }
 
@@ -131,10 +132,11 @@ ApplicationWindow {
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     TableViewColumn{ role: "no"; title: "No"; width: 25 }
                     TableViewColumn{ role: "time"; title: "Time"; width: 100 }
+                    TableViewColumn{ role: "type"; title: "Type"; width: 40}
                     TableViewColumn{ role: "len"; title: "Length"; width: 50}
                     TableViewColumn{ role: "src"; title: "Source"; width: 120 }
                     TableViewColumn{ role: "dst"; title: "Destination"; width: 120 }
-                    TableViewColumn{ role: "describe"; title: "Desctiption"; width: 385 }
+                    TableViewColumn{ role: "describe"; title: "Desctiption"; width: 340 }
                     onCurrentRowChanged: full_text.update_text(tabv.currentRow)
                 }
 

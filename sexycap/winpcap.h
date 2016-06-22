@@ -1,6 +1,7 @@
 #ifndef WINPCAP_H
 #define WINPCAP_H
 
+#include <mutex>
 #include <QObject>
 #include <QList>
 #include <QItemSelectionModel>
@@ -23,7 +24,10 @@ public:
     ~WinPcap();
 
     bool readDevices();
+    pcap_t* adapter() const;
     PacketModel* packetModel();
+    bool stop() const;
+    void setStop(bool status);
 
     // qml interfaces
     Q_INVOKABLE const QList<QObject*> devices();
@@ -31,13 +35,16 @@ public:
     Q_INVOKABLE bool captureStop();
     Q_INVOKABLE QString displaySelected(int index);
 
-private:
-    void capture(UserParam param);
+signals:
+    void redraw(QModelIndex,int,int);
 
+private:
     pcap_if_t* _alldevs;
     pcap_t* _adapter;
     QList<QObject*> _devices;
     PacketModel _packet_model;
+    bool _stop;
+    std::mutex _mtx;
 };
 
 #endif // WINPCAP_H

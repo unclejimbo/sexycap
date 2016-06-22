@@ -45,3 +45,5 @@ HEADERS += \
     dns.h
 
 DEFINES += WPCAP HAVE_REMOTE
+
+DISTFILES +=
